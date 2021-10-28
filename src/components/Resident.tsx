@@ -15,10 +15,12 @@ export default function Resident({ resident }: { resident: Character }) {
         objectFit="cover"
         objectPosition="center"
       />
-      <p>{name}</p>
-      <p>status: {status}</p>
-      <p>species: {species}</p>
-      <p>gender: {gender}</p>
+      <div className={styles.info}>
+        <p>{name}</p>
+        <p>status: {status}</p>
+        <p>species: {species}</p>
+        <p>gender: {gender}</p>
+      </div>
     </div>
   );
 }

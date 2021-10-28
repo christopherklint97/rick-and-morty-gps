@@ -1,8 +1,15 @@
 import { useMemo } from "react";
-import { Row, useExpanded, useFilters, useTable } from "react-table";
+import {
+  Row,
+  useExpanded,
+  useFilters,
+  useFlexLayout,
+  useTable,
+} from "react-table";
 import { Location } from "../types/gql/getLocations";
 import Resident from "./Resident";
 import SelectColumnFilter from "./SelectColumnFilter";
+import styles from "../styles/components/Table.module.css";
 
 export default function Table({ data }: { data: Location[] }) {
   const columns = useMemo(
@@ -23,6 +30,7 @@ export default function Table({ data }: { data: Location[] }) {
         accessor: "dimension",
         Filter: SelectColumnFilter,
         filter: "includes",
+        width: 170,
       },
       {
         Header: "Alive residents",
@@ -34,6 +42,7 @@ export default function Table({ data }: { data: Location[] }) {
           return count;
         },
         Filter: () => null,
+        width: 70,
       },
       {
         Header: "Dead residents",
@@ -45,6 +54,7 @@ export default function Table({ data }: { data: Location[] }) {
           return count;
         },
         Filter: () => null,
+        width: 70,
       },
       {
         Header: "Current guests",
@@ -60,6 +70,7 @@ export default function Table({ data }: { data: Location[] }) {
           return count;
         },
         Filter: () => null,
+        width: 70,
       },
       {
         Header: "Robots",
@@ -71,6 +82,7 @@ export default function Table({ data }: { data: Location[] }) {
           return count;
         },
         Filter: () => null,
+        width: 70,
       },
       {
         Header: "Humans",
@@ -82,6 +94,7 @@ export default function Table({ data }: { data: Location[] }) {
           return count;
         },
         Filter: () => null,
+        width: 70,
       },
       {
         Header: "Aliens",
@@ -93,6 +106,7 @@ export default function Table({ data }: { data: Location[] }) {
           return count;
         },
         Filter: () => null,
+        width: 70,
       },
       {
         Header: () => null,
@@ -123,54 +137,56 @@ export default function Table({ data }: { data: Location[] }) {
       data,
     },
     useExpanded,
-    useFilters
+    useFilters,
+    useFlexLayout
   );
 
   return (
-    <>
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            // eslint-disable-next-line react/jsx-key
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                // eslint-disable-next-line react/jsx-key
-                <th {...column.getHeaderProps()}>
-                  {column.render("Header")}
-                  <div>{column.render("Filter")}</div>
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row: any) => {
-            prepareRow(row);
-            return (
+    <table className={styles.table} {...getTableProps()}>
+      <thead>
+        {headerGroups.map((headerGroup) => (
+          // eslint-disable-next-line react/jsx-key
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map((column) => (
               // eslint-disable-next-line react/jsx-key
-              <>
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell: any) => {
-                    return (
-                      // eslint-disable-next-line react/jsx-key
-                      <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                    );
-                  })}
+              <th {...column.getHeaderProps()}>
+                {column.render("Header")}
+                <div>{column.render("Filter")}</div>
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody {...getTableBodyProps()}>
+        {rows.map((row: any) => {
+          prepareRow(row);
+          return (
+            // eslint-disable-next-line react/jsx-key
+            <>
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell: any) => {
+                  return (
+                    // eslint-disable-next-line react/jsx-key
+                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                  );
+                })}
+              </tr>
+              {row.isExpanded ? (
+                <tr>
+                  <td
+                    className={styles.residentsContainer}
+                    colSpan={totalColumnsWidth}
+                  >
+                    {data[row.index].residents.map((resident) => (
+                      <Resident key={resident.id} resident={resident} />
+                    ))}
+                  </td>
                 </tr>
-                {row.isExpanded ? (
-                  <tr>
-                    <td colSpan={totalColumnsWidth}>
-                      {data[row.index].residents.map((resident) => (
-                        <Resident key={resident.id} resident={resident} />
-                      ))}
-                    </td>
-                  </tr>
-                ) : null}
-              </>
-            );
-          })}
-        </tbody>
-      </table>
-    </>
+              ) : null}
+            </>
+          );
+        })}
+      </tbody>
+    </table>
   );
 }

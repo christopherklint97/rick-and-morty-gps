@@ -1,5 +1,12 @@
 .container {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  display: flex;
   gap: 20px;
+}
+.info > p {
+  margin-top: 5px;
+  font-size: 0.9rem;
+}
+.info > p:first-child {
+  font-weight: 500;
+  font-size: 1rem;
 }

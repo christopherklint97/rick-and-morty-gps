@@ -22,7 +22,12 @@ const Home: NextPage = ({
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   return (
     <main className={styles.main}>
-      <Table data={data.locations.results} />
+      <section className={styles.container}>
+        <h1>Rick and Morty Locations</h1>
+        <div className={styles.tableContainer}>
+          <Table data={data.locations.results} />
+        </div>
+      </section>
     </main>
   );
 };
